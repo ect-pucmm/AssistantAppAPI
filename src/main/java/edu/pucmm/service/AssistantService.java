@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import edu.pucmm.exceptions.AssistantNotFound;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import edu.pucmm.data.Assistant;
@@ -41,7 +42,7 @@ public class AssistantService {
     Assistant findAssis = findByEmail(assistant.email);
 
     if (findAssis == null) {
-        throw new RuntimeException("Ya el participante se enuentra registrado.");
+        throw new AssistantNotFound("Ya el participante se enuentra registrado.");
     }
 
     assistant.persistAndFlush();
