@@ -12,6 +12,9 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import edu.pucmm.data.Assistant;
 import io.quarkus.runtime.StartupEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ApplicationScoped
 public class AssistantService {
 
@@ -48,6 +51,16 @@ public class AssistantService {
     assistant.persistAndFlush();
     return assistant;
   }
+  
+  public List<Assistant> getAssistants() {
+      List<Assistant> assistants = Assistant.listAll();
+      
+      if (assistants == null) {
+          new ArrayList<>();
+      }
+      
+      return assistants;
+  } 
 
   @Transactional
   public void register() {
@@ -55,6 +68,8 @@ public class AssistantService {
       assistant.idUser = "00000001";
       assistant.nombre = "Juan Diego";
       assistant.apellido = "Lopez";
+      assistant.email = "juandiegolopezve@gmail.com";
+      assistant.documentId = "00000001";
       assistant.descriptionCategoryCompetitor = "Estudiante";
       assistant.paymentMethod = "Efectivo";
       assistant.persistAndFlush();
