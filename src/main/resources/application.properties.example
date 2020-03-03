@@ -1,0 +1,11 @@
+quarkus.log.level=FINE
+# DataSource
+quarkus.datasource.url=jdbc:postgresql://${DB_HOST:server-dev}:5432/${DB_NAME:assistant_service}
+quarkus.datasource.driver=org.postgresql.Driver
+quarkus.datasource.username=${DB_USER:postgres}
+quarkus.datasource.password=${DB_PASSWORD:p@ssw0rd}
+quarkus.datasource.max-size=8
+quarkus.datasource.min-size=2
+quarkus.hibernate-orm.log.sql=false
+quarkus.hibernate-orm.database.generation=drop-and-create
+app.init.db=false
