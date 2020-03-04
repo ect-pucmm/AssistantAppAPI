@@ -14,9 +14,9 @@ public class RestResponse {
 		this.data = data;
     }
     
-    public static RestResponse toResponseWithPagination(Object data, String message, Boolean hasErrors, Integer code, Integer page, Integer limit) {
-        return new RestResponse(data, message, hasErrors, code);
-    }
+//    public static RestResponse toResponseWithPagination(Object data, String message, Boolean hasErrors, Integer code, Integer page, Integer limit) {
+//        return new RestResponse(data, message, hasErrors, code);
+//    }
 
     public static RestResponse toResponse(Object data, String message, Boolean hasErrors, Integer code) {
         return new RestResponse(data, message, hasErrors, code);
