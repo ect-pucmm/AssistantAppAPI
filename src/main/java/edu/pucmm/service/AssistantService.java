@@ -44,7 +44,7 @@ public class AssistantService {
 
     Assistant findAssis = findByEmail(assistant.email);
 
-    if (findAssis == null) {
+    if (findAssis != null) {
         throw new AssistantNotFound("Ya el participante se enuentra registrado.");
     }
 
