@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import edu.pucmm.exceptions.AssistantExists;
 import edu.pucmm.exceptions.AssistantNotFound;
 import edu.pucmm.utils.Pagination;
 import edu.pucmm.utils.PaginationData;
@@ -55,6 +56,23 @@ public class AssistantService {
         assistant.persistAndFlush();
         return assistant;
     }
+    
+    @Transactional
+    public Assistant assistAssisant(Assistant assistant) {
+        
+        if (assistant.email == null || assistant.email.isEmpty()) {
+            throw new AssistantNotFound("Error en el sistema");
+        }
+        Assistant findAssis = findByEmail(assistant.email);
+
+        if (findAssis.assist) {
+            throw new AssistantExists("El participante está registrado");
+        }
+
+        findAssis.assist = true;
+        findAssis.persistAndFlush();
+        return findAssis;
+    }
 
     public List<Assistant> getAssistants() {
         List<Assistant> assistants = Assistant.listAll();
@@ -67,6 +85,33 @@ public class AssistantService {
     }
 
     @Transactional
+    public PaginationData getParticipantsByNombreOrApellido(Integer page, Integer limit, String name) {
+        Integer offset = page * limit;
+        Stream<Assistant> streamAll = Assistant.streamAll();
+        List<Assistant> assistants;
+        List<Assistant> pagination;
+        if (name != null) {
+            assistants = streamAll
+                .filter(n -> (n.nombre.toLowerCase().contains(name.toLowerCase()) || n.apellido.toLowerCase().contains(name.toLowerCase())) && !n.assist)
+                .collect(Collectors.toList());
+
+        } else {
+            assistants = streamAll
+                .filter(n -> !n.assist)
+                .collect(Collectors.toList());
+        }
+        pagination = assistants.subList(
+            Math.min(assistants.size(), offset),
+            Math.min(assistants.size(), offset + limit));
+
+        if (assistants == null) {
+            new ArrayList<>();
+        }
+
+        return PaginationData.paginationResponse(pagination, assistants.size(), pagination.size(), page + 1, limit, offset);
+    }
+
+    @Transactional
     public PaginationData getAssistantsByNombreOrApellido(Integer page, Integer limit, String name) {
         Integer offset = page * limit;
         Stream<Assistant> streamAll = Assistant.streamAll();
@@ -74,16 +119,18 @@ public class AssistantService {
         List<Assistant> pagination;
         if (name != null) {
             assistants = streamAll
-                .filter(n -> n.nombre.toLowerCase().contains(name) || n.apellido.toLowerCase().contains(name))
+                .filter(n -> (n.nombre.toLowerCase().contains(name.toLowerCase()) || n.apellido.toLowerCase().contains(name.toLowerCase())) && n.assist)
                 .collect(Collectors.toList());
 
         } else {
-            assistants = streamAll.collect(Collectors.toList());
+            assistants = streamAll
+                .filter(n -> n.assist)
+                .collect(Collectors.toList());
         }
         pagination = assistants.subList(
             Math.min(assistants.size(), offset),
             Math.min(assistants.size(), offset + limit));
-        
+
         if (assistants == null) {
             new ArrayList<>();
         }

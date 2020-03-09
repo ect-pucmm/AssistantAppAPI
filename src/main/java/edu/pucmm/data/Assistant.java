@@ -4,19 +4,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity(name = "assistant")
 public class Assistant extends PanacheEntity {
-
-  // 0000000001|Stephanie|Willis|3138838020|eswillis@gmail.com|Profesor de Canadá/EEUU/Europa|Pago presencial en efectivo el día 19 de marzo
-
-  // a. ID
-	// b. Nombres
-	// c. Apellidos
-	// d. DocuimentoID
-	// e. EmailParticipante
-	// f. DescripcionCategoriaParticipante
-  // g. DescripciónFormaPago
 
   @Column(name = "id_user")
   public String idUser;
@@ -37,5 +28,8 @@ public class Assistant extends PanacheEntity {
 
   @Column(name = "payment_method")
   public String paymentMethod;
+  
+  @Column(name = "assist", columnDefinition = "boolean default false")
+  public boolean assist;
 
 }
